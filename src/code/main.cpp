@@ -12,13 +12,12 @@
 #include "../project_version.h"
 
 //Useful for setting quickly an app template
-#define PROJECT_URI "org.maui.astro"
 #define ORG_NAME "Maui"
-#define PROJECT_NAME "Astro"
-#define COMPONENT_NAME "astro"
+#define PROJECT_NAME "Maui Calendar"
+#define COMPONENT_NAME "maui-calendar"
 #define PROJECT_DESCRIPTION "View and organize your calendar events."
 #define PROJECT_YEAR "2022"
-#define PRODUCT_NAME "maui/astro"
+#define PRODUCT_NAME "maui/calendar"
 #define PROJECT_PAGE "https://mauikit.org"
 #define REPORT_PAGE "https://invent.kde.org/maui/index-fm/-/issues"
 
@@ -36,7 +35,7 @@ int main(int argc, char *argv[])
     KLocalizedString::setApplicationDomain(COMPONENT_NAME);
 
     KAboutData about(QStringLiteral(COMPONENT_NAME), i18n(PROJECT_NAME), PROJECT_VERSION_STRING, i18n(PROJECT_DESCRIPTION),
-                     KAboutLicense::LGPL_V3, i18n("© %1-%2 %3 Development Team", PROJECT_YEAR, QString::number(QDate::currentDate().year()), ORG_NAME), QString(GIT_BRANCH) + "/" + QString(GIT_COMMIT_HASH));
+                     KAboutLicense::LGPL_V3, QString("© %1-%2 %3 Development Team").arg(PROJECT_YEAR, QString::number(QDate::currentDate().year()), ORG_NAME), QString(GIT_BRANCH) + "/" + QString(GIT_COMMIT_HASH));
 
     about.addAuthor(i18n("Camilo Higuita"), i18n("Developer"), QStringLiteral("milo.h@aol.com"));
 

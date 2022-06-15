@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(astro VERSION 1.0.0)
+project(maui-calendar VERSION 1.0.0)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -13,9 +13,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(REQUIRED_KF5_VERSION 5.77.0)
 
+set(PROJECT_URI "org.kde.${PROJECT_NAME}")
+add_definitions(-DPROJECT_URI="${PROJECT_URI}")
+
+set(AKONADI_VERSION "5.19.0")
+set(AKONADI_CONTACT_VERSION "5.19.0")
+set(CALENDARSUPPORT_LIB_VERSION "5.19")
+set(EVENTVIEW_LIB_VERSION "5.19.0")
+
 find_package(ECM ${REQUIRED_KF5_VERSION} REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
-
 
 include(KDEInstallDirs)
 include(KDECMakeSettings)
@@ -42,6 +49,10 @@ set_package_properties(Qt5QuickCompiler PROPERTIES
 
 find_package(MauiKit)
 
+find_package(KF5Akonadi ${AKONADI_VERSION} CONFIG REQUIRED)
+find_package(KF5AkonadiContact ${AKONADI_CONTACT_VERSION} CONFIG REQUIRED)
+find_package(KF5CalendarSupport ${CALENDARSUPPORT_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5EventViews ${EVENTVIEW_LIB_VERSION} CONFIG REQUIRED)
 
 if(ECM_SOURCE_UNDER_VERSION_CONTROL)
     execute_process(
@@ -67,7 +78,6 @@ else()
     add_definitions(-DGIT_BRANCH="${CMAKE_BUILD_TYPE}")
 endif()
 
-
 ecm_setup_version(${PROJECT_VERSION}
     VARIABLE_PREFIX PROJECT
     VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/project_version.h"
@@ -75,11 +85,11 @@ ecm_setup_version(${PROJECT_VERSION}
 
 add_subdirectory(src)
 
-install(FILES data/org.kde.vvave.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
+install(FILES data/project.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR} RENAME ${PROJECT_URI}.appdata.xml)
 
-install(FILES data/org.kde.clip.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(FILES data/project.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} RENAME ${PROJECT_URI}.desktop)
 
-install(FILES assets/clip.svg DESTINATION ${KDE_INSTALL_ICONDIR}/hicolor/scalable/apps)
+install(FILES src/assets/logo.svg DESTINATION ${KDE_INSTALL_ICONDIR}/hicolor/scalable/apps RENAME ${PROJECT_NAME}.svg)
 
 #install(FILES data/org.kde.index.notifyrc DESTINATION ${KNOTIFYRC_INSTALL_DIR})
 

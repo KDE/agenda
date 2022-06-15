@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtQml 2.15
 import QtQuick.Controls 2.15
 
 import org.mauikit.controls 1.3 as Maui
@@ -23,5 +24,15 @@ Maui.ApplicationWindow
             icon.name: "documentinfo"
             onTriggered: root.about()
         }
+    }
+
+    Maui.Holder
+    {
+        anchors.fill: parent
+        visible: true
+
+        emoji: Maui.App.iconName
+        title: Maui.App.about.displayName
+        body: Maui.App.about.shortDescription
     }
 }
