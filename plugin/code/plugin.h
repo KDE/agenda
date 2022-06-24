@@ -3,7 +3,6 @@
 #include <QObject>
 #include <QQmlExtensionPlugin>
 
-
 class MauiCalendarPlugin : public QQmlExtensionPlugin
 {
     Q_OBJECT
@@ -11,8 +10,8 @@ class MauiCalendarPlugin : public QQmlExtensionPlugin
 public:
     void registerTypes(const char *uri) override;
 
-    QString resolveFileUrl(const QString &filePath) const
+    QUrl resolveFileUrl(const QString &filePath) const
     {
-        return QStringLiteral("qrc:/maui/calendar/") + filePath;
+        return QUrl(QStringLiteral("qrc:/maui/calendar/") + filePath);
     }
 };

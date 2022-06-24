@@ -16,15 +16,16 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(REQUIRED_KF5_VERSION 5.77.0)
+set(QT_MIN_VERSION "5.15.2")
+set(KF5_MIN_VERSION "5.92.0")
 
 set(AKONADI_VERSION "5.19.0")
 set(AKONADI_CONTACT_VERSION "5.19.0")
 set(CALENDARSUPPORT_LIB_VERSION "5.19")
 set(EVENTVIEW_LIB_VERSION "5.19.0")
 
-find_package(ECM ${REQUIRED_KF5_VERSION} REQUIRED NO_MODULE)
-set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
+find_package(ECM ${KF5_MIN_VERSION} REQUIRED NO_MODULE)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH})
 
 include(KDEInstallDirs)
 include(KDECMakeSettings)
@@ -35,13 +36,9 @@ include(KDEClangFormat)
 include(ECMSetupVersion)
 include(ECMSourceVersionControl)
 include(FeatureSummary)
-include(ECMQMLModules)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Quick Widgets REQUIRED)
-
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick Widgets REQUIRED)
-
-find_package(KF5 ${REQUIRED_KF5_VERSION} REQUIRED COMPONENTS I18n CoreAddons Config)
+find_package(Qt5 ${QT_MIN_VERSION} REQUIRED COMPONENTS Core Quick Qml Widgets)
+find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS I18n CoreAddons Config)
 
 find_package(Qt5QuickCompiler)
 set_package_properties(Qt5QuickCompiler PROPERTIES
@@ -63,10 +60,10 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/code/models
     )
 
-file(GLOB model_SRCS
+#file(GLOB model_SRCS
 
-     "models/*.cpp"
-)
+#     "models/*.cpp"
+#)
 
 set(lib_SRCS
     code/plugin.cpp
@@ -93,7 +90,6 @@ qtquick_compiler_add_resources(lib_QML_QRC controls/qml.qrc)
 add_library(${PROJECT_NAME}
     ${lib_SRCS}
     ${model_SRCS}
-    ${lib_HDRS}
     ${lib_QML_QRC}
     )
 
@@ -101,9 +97,10 @@ target_link_libraries(${PROJECT_NAME}
     PRIVATE
     MauiKit
 
-    Qt${QT_VERSION_MAJOR}::Core
-    Qt${QT_VERSION_MAJOR}::Quick
-    Qt${QT_VERSION_MAJOR}::Widgets
+    Qt5::Core
+    Qt5::Quick
+    Qt5::Qml
+    Qt5::Widgets
 
     KF5::CoreAddons
     KF5::I18n
@@ -139,3 +136,4 @@ if (BUILD_SHARED_LIBS)
 endif()
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${KDE_INSTALL_QMLDIR}/org/maui/calendar )
+install(TARGETS ${PROJECT_NAME} #[[EXPORT CaskLibTargets]] ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

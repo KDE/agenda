@@ -1,4 +1,7 @@
 #include "plugin.h"
+
+#include <QQmlEngine>
+
 #include "infinitecalendarviewmodel.h"
 #include "hourlyincidencemodel.h"
 #include "incidenceoccurrencemodel.h"
@@ -6,10 +9,9 @@
 #include "monthmodel.h"
 
 
-#include <KCalendarCore/MemoryCalendar>
-#include <KCalendarCore/VCalFormat>
+//#include <KCalendarCore/MemoryCalendar>
+//#include <KCalendarCore/VCalFormat>
 
-#include <QQmlEngine>
 
 void MauiCalendarPlugin::registerTypes(const char *uri)
 {

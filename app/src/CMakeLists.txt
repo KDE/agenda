@@ -30,14 +30,14 @@ target_link_libraries(${PROJECT_NAME}
     KF5::CoreAddons
     KF5::I18n
 
-    KF5::CalendarCore
-    KF5::AkonadiCore
-    KF5::AkonadiCalendar
-    KF5::AkonadiContact
-    KF5::AkonadiAgentBase
-    KF5::AkonadiXml
-    KF5::CalendarSupport
-    KF5::Contacts
+#    KF5::CalendarCore
+#    KF5::AkonadiCore
+#    KF5::AkonadiCalendar
+#    KF5::AkonadiContact
+#    KF5::AkonadiAgentBase
+#    KF5::AkonadiXml
+#    KF5::CalendarSupport
+#    KF5::Contacts
     )
 
 install(TARGETS ${PROJECT_NAME} ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

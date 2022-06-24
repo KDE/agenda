@@ -54,7 +54,7 @@ background: Rectangle
     Kalendar.InfiniteCalendarViewModel
     {
         id: _monthViewModel
-        scale: InfiniteCalendarViewModel.MonthScale
+        scale: Kalendar.InfiniteCalendarViewModel.MonthScale
 //        calendar: CalendarManager.calendar
 //        filter: root.filter
     }
