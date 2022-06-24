@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/maui/calendar">
+        <file alias="DayGridView.qml">DayGridView.qml</file>
+        <file alias="HourlyView.qml">HourlyView.qml</file>
+        <file alias="MonthView.qml">MonthView.qml</file>
+        <file alias="KalendarUiUtils.qml">KalendarUiUtils.qml</file>
+        <file alias="DayLabelsBar.qml">DayLabelsBar.qml</file>
+        <file>dateutils.js</file>
+        <file>labelutils.js</file>
+    </qresource>
+</RCC>
