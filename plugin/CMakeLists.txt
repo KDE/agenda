@@ -37,7 +37,7 @@ include(ECMSetupVersion)
 include(ECMSourceVersionControl)
 include(FeatureSummary)
 
-find_package(Qt5 ${QT_MIN_VERSION} REQUIRED COMPONENTS Core Quick Qml Widgets)
+find_package(Qt5 ${QT_MIN_VERSION} REQUIRED COMPONENTS Core Quick Qml)
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS I18n CoreAddons Config)
 
 find_package(Qt5QuickCompiler)
@@ -100,7 +100,6 @@ target_link_libraries(${PROJECT_NAME}
     Qt5::Core
     Qt5::Quick
     Qt5::Qml
-    Qt5::Widgets
 
     KF5::CoreAddons
     KF5::I18n
