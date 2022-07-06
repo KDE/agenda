@@ -115,23 +115,25 @@ target_link_libraries(${PROJECT_NAME}
     KF5::Contacts
     )
 
-install(FILES
-    ${lib_HDRS}
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/Maui/Calendar
-    COMPONENT Devel)
+#install(FILES
+#    ${lib_HDRS}
+#    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/Maui/Calendar
+#    COMPONENT Devel)
+
+set(CALENDAR_PLUGIN_DIR ${CMAKE_BINARY_DIR}/bin PARENT_SCOPE)
+set(CALENDAR_PLUGIN_DIR ${CMAKE_BINARY_DIR}/bin)
 
 if (BUILD_SHARED_LIBS)
     add_custom_target(copy_calendar_to_bin ALL
         COMMAND ${CMAKE_COMMAND} -E
-        make_directory ${CMAKE_BINARY_DIR}/bin/org/maui/calendar/
+        make_directory ${CALENDAR_PLUGIN_DIR}/org/maui/calendar/
         COMMAND ${CMAKE_COMMAND} -E
-        copy ${CMAKE_CURRENT_SOURCE_DIR}/controls/qmldir ${CMAKE_BINARY_DIR}/bin/org/maui/calendar/
+        copy ${CMAKE_CURRENT_SOURCE_DIR}/controls/qmldir ${CALENDAR_PLUGIN_DIR}/org/maui/calendar/
         COMMAND ${CMAKE_COMMAND} -E
-        copy $<TARGET_FILE:${PROJECT_NAME}> ${CMAKE_BINARY_DIR}/bin/org/maui/calendar/
+        copy $<TARGET_FILE:${PROJECT_NAME}> ${CALENDAR_PLUGIN_DIR}/org/maui/calendar/
         )
 
         install(FILES controls/qmldir DESTINATION ${KDE_INSTALL_QMLDIR}/org/maui/calendar)
-
 endif()
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${KDE_INSTALL_QMLDIR}/org/maui/calendar )

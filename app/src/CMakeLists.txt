@@ -40,4 +40,10 @@ target_link_libraries(${PROJECT_NAME}
 #    KF5::Contacts
     )
 
+message("PLUGIN DIR" ${CALENDAR_PLUGIN_DIR} " to "  ${CMAKE_CURRENT_BINARY_DIR})
+add_custom_target(copy_calendar_plugin_to_bin ALL
+    COMMAND ${CMAKE_COMMAND} -E
+    copy_directory ${CALENDAR_PLUGIN_DIR} ${CMAKE_CURRENT_BINARY_DIR}
+    )
+
 install(TARGETS ${PROJECT_NAME} ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

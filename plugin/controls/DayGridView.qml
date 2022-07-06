@@ -6,14 +6,13 @@
 import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15 as QQC2
-import org.kde.kirigami 2.14 as Kirigami
 import org.mauikit.controls 1.3 as Maui
 
 import org.maui.calendar 1.0 as Kalendar
 import "dateutils.js" as DateUtils
 import "labelutils.js" as LabelUtils
 
-Item
+QQC2.Pane
 {
     id: root
 
@@ -31,8 +30,10 @@ Item
     property date startDate
     property bool paintGrid: true
     property bool showDayIndicator: true
+
     property Component dayHeaderDelegate
     property Component weekHeaderDelegate
+
     property int month
     property alias bgLoader: backgroundLoader.item
     property bool isCurrentView: true
@@ -42,38 +43,33 @@ Item
     //Internal
     property int numberOfLinesShown: 0
     property int numberOfRows: (daysToShow / daysPerRow)
-    property int dayWidth: root.showWeekNumbers ?
-                               ((width - weekHeaderWidth) / daysPerRow) - spacing : // No spacing on right, spacing in between weekheader and monthgrid
-                               (width - weekHeaderWidth - (spacing * (daysPerRow - 1))) / daysPerRow // No spacing on left or right of month grid when no week header
-    property int dayHeight: ((height - bgLoader.dayLabelsBar.height) / numberOfRows) - spacing
-    property int spacing: Kalendar.Config.monthGridBorderWidth // Between grid squares in background
-    property int listViewSpacing: root.dayWidth < (Kirigami.Units.gridUnit * 5 + Kirigami.Units.smallSpacing * 2) ?
-                                      Kirigami.Units.smallSpacing / 2 : Kirigami.Units.smallSpacing // Between lines of incidences ( ====== <- )
+
+    property int dayWidth: (root.showWeekNumbers ?
+                                ((width - weekHeaderWidth) / daysPerRow) - spacing : // No spacing on right, spacing in between weekheader and monthgrid
+                                (width -  rightPadding  - leftPadding - weekHeaderWidth - (spacing * (daysPerRow - 1))) / daysPerRow) // No spacing on left or right of month grid when no week header
+
+    property int dayHeight: ((height - topPadding - bottomPadding - bgLoader.dayLabelsBar.height) / numberOfRows) - spacing
+
     readonly property bool isDark: KalendarUiUtils.darkMode
-    readonly property int mode: Kalendar.KalendarApplication.Event
+    //    readonly property int mode: Kalendar.KalendarApplication.Event
 
-    implicitHeight: (numberOfRows > 1 ? Kirigami.Units.gridUnit * 10 * numberOfRows : numberOfLinesShown * Kirigami.Units.gridUnit) + bgLoader.dayLabelsBar.height
-    height: implicitHeight
+    //    implicitHeight: (numberOfRows > 1 ? Maui.Style.units.gridUnit * 10 * numberOfRows : numberOfLinesShown * Maui.Style.units.gridUnit) + bgLoader.dayLabelsBar.height +topPadding + bottomPadding
+    //    height: implicitHeight
+    readonly property bool isWide : dayWidth > Maui.Style.units.gridUnit * 5
 
-    //    Kirigami.Separator {
-    //        id: gridBackground
-    //        anchors {
-    //            fill: parent
-    //            topMargin: root.bgLoader.dayLabelsBar.height
-    //        }
-    //        visible: backgroundLoader.status === Loader.Ready
-    //    }
+    padding: Maui.Style.space.medium
+    spacing: Maui.Style.space.small
+    background: null
+    signal dateClicked(var date)
 
-    Loader
+    contentItem: Loader
     {
         id: backgroundLoader
-        anchors.fill: parent
         asynchronous: !root.isCurrentView
         sourceComponent: Column
         {
             id: rootBackgroundColumn
             spacing: root.spacing
-            anchors.fill: parent
 
             property alias dayLabelsBar: dayLabelsBarComponent
             Kalendar.DayLabelsBar
@@ -135,11 +131,20 @@ Item
                                     id: gridRepeater
                                     model: root.daysPerRow
 
-                                    Item
+                                    QQC2.Button
                                     {
                                         id: gridItem
+                                        Maui.Theme.colorSet: Maui.Theme.View
+                                        Maui.Theme.inherit: false
+
                                         height: root.dayHeight
                                         width: root.dayWidth
+                                        enabled: root.daysToShow > 1
+                                        visible: root.showDayIndicator
+                                        padding: Maui.Style.space.small
+                                        onClicked: root.dateClicked(gridItem.date)
+
+
                                         property date gridSquareDate: date
                                         property date date: DateUtils.addDaysToDate(dayDelegate.startDate, modelData)
                                         property int day: date.getDate()
@@ -148,87 +153,50 @@ Item
                                         property bool isToday: day === root.currentDay && month === root.currentMonth && year === root.currentYear
                                         property bool isCurrentMonth: month === root.month
 
-                                        Rectangle
+                                        background: Rectangle
                                         {
-                                            id: backgroundRectangle
-                                            anchors.fill: parent
-                                            Maui.Theme.inherit: false
-                                            Maui.Theme.colorSet: Maui.Theme.View
-                                            color:
-                                                gridItem.isToday ? Maui.Theme.activeBackgroundColor :
-                                                                   gridItem.isCurrentMonth ? Maui.Theme.backgroundColor : Maui.Theme.alternateBackgroundColor
-
-                                            //                                            DayMouseArea {
-                                            //                                                id: backgroundDayMouseArea
-                                            //                                                anchors.fill: parent
-                                            //                                                addDate: gridItem.date
-                                            //                                                onAddNewIncidence: KalendarUiUtils.setUpAdd(type, addDate)
-                                            //                                                onDeselect: KalendarUiUtils.appMain.incidenceInfoDrawer.close()
-
-                                            //                                                DropArea {
-                                            //                                                    id: incidenceDropArea
-                                            //                                                    anchors.fill: parent
-                                            //                                                    z: 9999
-                                            //                                                    onDropped: if(root.isCurrentView) {
-                                            //                                                        const pos = mapToItem(root, backgroundRectangle.x, backgroundRectangle.y);
-                                            //                                                        drop.source.caughtX = pos.x + root.listViewSpacing;
-                                            //                                                        drop.source.caughtY = root.showDayIndicator ?
-                                            //                                                            pos.y + Kirigami.Units.gridUnit + Kirigami.Units.largeSpacing * 1.5 :
-                                            //                                                            pos.y;
-                                            //                                                        drop.source.caught = true;
-
-                                            //                                                        const incidenceWrapper = Qt.createQmlObject('import org.kde.kalendar 1.0; IncidenceWrapper {id: incidence}', incidenceDropArea, "incidence");
-                                            //                                                        incidenceWrapper.incidenceItem = Kalendar.CalendarManager.incidenceItem(drop.source.incidencePtr);
-
-                                            //                                                        let sameTimeOnDate = new Date(backgroundDayMouseArea.addDate);
-                                            //                                                        sameTimeOnDate = new Date(sameTimeOnDate.setHours(drop.source.occurrenceDate.getHours(), drop.source.occurrenceDate.getMinutes()));
-                                            //                                                        const offset = sameTimeOnDate.getTime() - drop.source.occurrenceDate.getTime();
-                                            //                                                        KalendarUiUtils.setUpIncidenceDateChange(incidenceWrapper, offset, offset, drop.source.occurrenceDate, drop.source)
-                                            //                                                    }
-                                            //                                                }
-                                            //                                            }
+                                            visible: gridItem.isCurrentMonth
+                                            color: gridItem.isToday ? Maui.Theme.activeBackgroundColor :
+                                                                      gridItem.hovered ? Maui.Theme.hoverColor : Maui.Theme.alternateBackgroundColor
+                                            radius: Maui.Style.radiusV
                                         }
 
-                                        // Day number
-                                        QQC2.Button
+                                        contentItem: RowLayout
                                         {
-                                            anchors.top: parent.top
-                                            anchors.right: parent.right
-                                            anchors.left: parent.left
-                                            implicitHeight: dayNumberLayout.implicitHeight
-
-                                            flat: true
+                                            id: dayNumberLayout
                                             visible: root.showDayIndicator
-                                            enabled: root.daysToShow > 1
-                                            onClicked: KalendarUiUtils.openDayLayer(gridItem.date)
 
-                                            contentItem: RowLayout
+                                            QQC2.Label
                                             {
-                                                id: dayNumberLayout
-                                                visible: root.showDayIndicator
+                                                Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                                                text: i18n("Today")
+                                                renderType: Text.QtRendering
+                                                color: Maui.Theme.highlightedTextColor
+                                                visible: gridItem.isToday && root.isWide
+                                                font.bold: root.isWide
+                                                font.weight: root.isWide ? Font.Bold : Font.Normal
+                                                font.pointSize: root.isWide ? Maui.Style.fontSizes.big : Maui.Style.fontSizes.small
+                                            }
 
-                                                QQC2.Label {
-                                                    Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-                                                    padding: Maui.Style.units.smallSpacing
-                                                    text: i18n("<b>Today</b>")
-                                                    renderType: Text.QtRendering
-                                                    color: Maui.Theme.highlightedTextColor
-                                                    visible: gridItem.isToday && gridItem.width > Maui.Style.units.gridUnit * 5
-                                                }
-                                                QQC2.Label {
-                                                    Layout.alignment: Qt.AlignRight | Qt.AlignTop
-                                                    text: gridItem.date.toLocaleDateString(Qt.locale(), gridItem.day == 1 ?
-                                                                                               "d MMM" : "d")
-                                                    renderType: Text.QtRendering
-                                                    padding: Maui.Style.units.smallSpacing
-                                                    visible: root.showDayIndicator
-                                                    color: gridItem.isToday ?
-                                                               Maui.Theme.highlightedTextColor :
-                                                               (!gridItem.isCurrentMonth ? Maui.Theme.disabledTextColor : Maui.Theme.textColor)
-                                                    font.bold: gridItem.isToday
-                                                }
+                                            QQC2.Label
+                                            {
+                                                Layout.alignment: gridItem.width > Maui.Style.units.gridUnit * 5 ? Qt.AlignRight | Qt.AlignTop : Qt.AlignCenter
+
+                                                text: gridItem.date.toLocaleDateString(Qt.locale(), gridItem.day == 1 ?
+                                                                                           "d MMM" : "d")
+                                                renderType: Text.QtRendering
+                                                horizontalAlignment: Qt.AlignHCenter
+
+                                                color: gridItem.isToday ?
+                                                           Maui.Theme.highlightedTextColor :
+                                                           (!gridItem.isCurrentMonth ? Maui.Theme.disabledTextColor : Maui.Theme.textColor)
+                                                font.bold: root.isWide
+                                                font.weight: root.isWide ? Font.Bold : Font.Normal
+                                                font.pointSize: root.isWide ? Maui.Style.fontSizes.big : Maui.Style.fontSizes.small
+
                                             }
                                         }
+
                                     }
                                 }
                             }

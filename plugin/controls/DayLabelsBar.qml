@@ -15,7 +15,7 @@ Row
     property int daysToShow
     property Component delegate
 
-    height: childrenRect.height
+//    height: childrenRect.height
 
     spacing: 0
     Repeater

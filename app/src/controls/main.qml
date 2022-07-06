@@ -20,57 +20,99 @@ Maui.ApplicationWindow
             visible: true
 
             emoji: "view-calendar"
-            title: "Events"
+            title: Qt.formatDateTime(_appViews.currentItem.selectedDate, "dd MMM yyyy")
             body: "No events for this day"
         }
 
-        Maui.Page
+        Maui.AppViews
         {
+            id: _appViews
             anchors.fill: parent
-            headBar.leftContent: Maui.ToolButtonMenu
-            {
-                icon.name: "application-menu"
-                MenuItem
+            showCSDControls: true
+            headBar.leftContent: [Maui.ToolButtonMenu
                 {
-                    text: i18n("Settings")
-                    icon.name: "settings-configure"
+                    icon.name: "application-menu"
+                    MenuItem
+                    {
+                        text: i18n("Settings")
+                        icon.name: "settings-configure"
+                    }
+
+                    MenuItem
+                    {
+                        text: i18n("About")
+                        icon.name: "documentinfo"
+                        onTriggered: root.about()
+                    }
+                },
+                ToolButton
+                {
+                    icon.name: "sidebar-collapse"
+                    onClicked: _sideBarView.sideBar.toggle()
+                    checked: _sideBarView.sideBar.visible
                 }
 
-                MenuItem
+            ]
+
+            //            headBar.middleContent: Maui.ToolActions
+            //            {
+            //                Layout.alignment: Qt.AlignCenter
+            //                expanded: true
+            //                autoExclusive: true
+
+            //                Action
+            //                {
+            //                    text: i18n("Year")
+            //                    onTriggered: _loaderView.sourceComponent = _yearViewComponent
+            //                }
+
+            //                Action
+            //                {
+            //                    text: i18n("Month")
+            //                    onTriggered: _loaderView.sourceComponent = _monthViewComponent
+            //                }
+
+            //                Action
+            //                {
+            //                    text: i18n("Week")
+            //                    onTriggered: _loaderView.sourceComponent = _weekViewComponent
+
+            //                }
+            //            }
+
+
+                Cal.MonthView
                 {
-                    text: i18n("About")
-                    icon.name: "documentinfo"
-                    onTriggered: root.about()
+                    id: _monthView
+                     Maui.AppView.title: i18n("Month")
+                }
+
+
+            Maui.AppViewLoader
+            {
+                Maui.AppView.title: i18n("Year")
+
+                Cal.YearView
+                {
+                    onMonthClicked:
+                    {
+                        _appViews.currentIndex = 0
+                        _monthView.setToDate(date)
+                    }
                 }
             }
 
-            headBar.middleContent: Maui.ToolActions
-            {
-                Layout.alignment: Qt.AlignCenter
-                expanded: true
-                autoExclusive: true
-
-                Action
-                {
-                    text: i18n("Year")
-                }
-
-                Action
-                {
-                    text: i18n("Month")
-                }
-
-                Action
-                {
-                    text: i18n("Week")
-                }
-            }
-
-            Cal.MonthView
-            {
-                anchors.fill: parent
-            }
+            //                Maui.AppViewLoader
+            //                {
+            //                    id: _weekViewComponent
+            //                    Cal.HourlyView
+            //                    {
+            //                    }
+            //                }
         }
+
+
+
     }
 
 }

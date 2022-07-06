@@ -6,14 +6,13 @@
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.15 as QQC2
-import org.kde.kirigami 2.14 as Kirigami
 
 import org.mauikit.controls 1.3 as Maui
 import org.maui.calendar 1.0 as Kalendar
 
 import "dateutils.js" as DateUtils
 
-QQC2.Pane
+Maui.Page
 {
     id: monthPage
 
@@ -41,25 +40,29 @@ QQC2.Pane
     property int month
     property int year
     property bool initialMonth: true
-    readonly property bool isLarge: width > Kirigami.Units.gridUnit * 40
-    readonly property bool isTiny: width < Kirigami.Units.gridUnit * 18
-    readonly property int mode: Kalendar.KalendarApplication.Event
+    readonly property bool isLarge: width > Maui.Style.units.gridUnit * 40
+    readonly property bool isTiny: width < Maui.Style.units.gridUnit * 18
+
+    property date selectedDate : currentDate
 
     property bool dragDropEnabled: true
 
-background: Rectangle
-{
- color: Maui.Theme.backgroundColor
-}
+    background: Rectangle
+    {
+        color: Maui.Theme.backgroundColor
+    }
+
     Kalendar.InfiniteCalendarViewModel
     {
         id: _monthViewModel
         scale: Kalendar.InfiniteCalendarViewModel.MonthScale
-//        calendar: CalendarManager.calendar
-//        filter: root.filter
+        //        calendar: CalendarManager.calendar
+        //        filter: root.filter
     }
 
-    function setToDate(date, isInitialMonth = false) {
+
+    function setToDate(date, isInitialMonth = false)
+    {
         monthPage.initialMonth = isInitialMonth;
         let monthDiff = date.getMonth() - pathView.currentItem.firstDayOfMonth.getMonth() + (12 * (date.getFullYear() - pathView.currentItem.firstDayOfMonth.getFullYear()))
         let newIndex = pathView.currentIndex + monthDiff;
@@ -83,32 +86,36 @@ background: Rectangle
         pathView.currentIndex = newIndex;
     }
 
+    headBar.background: null
+    title: Qt.formatDate(pathView.currentItem.startDate, "MMM yyyy")
 
+    headBar.leftContent: Maui.ToolActions
+    {
+        autoExclusive: false
+        checkable: false
 
-    //    readonly property Kirigami.Action previousAction: Kirigami.Action {
-    //        icon.name: "go-previous"
-    //        text: i18n("Previous Month")
-    //        shortcut: "Left"
-    //        onTriggered: setToDate(DateUtils.addMonthsToDate(pathView.currentItem.firstDayOfMonth, -1))
-    //        displayHint: Kirigami.DisplayHint.IconOnly
-    //    }
-    //    readonly property Kirigami.Action nextAction: Kirigami.Action {
-    //        icon.name: "go-next"
-    //        text: i18n("Next Month")
-    //        shortcut: "Right"
-    //        onTriggered: setToDate(DateUtils.addMonthsToDate(pathView.currentItem.firstDayOfMonth, 1))
-    //        displayHint: Kirigami.DisplayHint.IconOnly
-    //    }
-    //    readonly property Kirigami.Action todayAction: Kirigami.Action {
-    //        icon.name: "go-jump-today"
-    //        text: i18n("Today")
-    //        onTriggered: setToDate(new Date())
-    //    }
-    //    actions {
-    //        left: Qt.application.layoutDirection === Qt.RightToLeft ? nextAction : previousAction
-    //        right: Qt.application.layoutDirection === Qt.RightToLeft ? previousAction : nextAction
-    //        main: todayAction
-    //    }
+        QQC2.Action
+        {
+            icon.name: "go-previous"
+            text: i18n("Previous Month")
+            shortcut: "Left"
+            onTriggered: setToDate(DateUtils.addMonthsToDate(pathView.currentItem.firstDayOfMonth, -1))
+        }
+        QQC2.Action
+        {
+            icon.name: "go-jump-today"
+            text: i18n("Today")
+            onTriggered: setToDate(new Date())
+        }
+        QQC2.Action
+        {
+            icon.name: "go-next"
+            text: i18n("Next Month")
+            shortcut: "Right"
+            onTriggered: setToDate(DateUtils.addMonthsToDate(pathView.currentItem.firstDayOfMonth, 1))
+        }
+    }
+
 
     PathView
     {
@@ -118,6 +125,7 @@ background: Rectangle
         flickDeceleration: Maui.Style.units.longDuration
         preferredHighlightBegin: 0.5
         preferredHighlightEnd: 0.5
+        //        spacing: 10
         snapMode: PathView.SnapToItem
         focus: true
         //        interactive: Kirigami.Settings.tabletMode
@@ -134,11 +142,15 @@ background: Rectangle
         model: monthPage.model
 
         property int startIndex
-        Component.onCompleted: {
+
+        Component.onCompleted:
+        {
             startIndex = count / 2;
             currentIndex = startIndex;
         }
-        onCurrentIndexChanged: {
+
+        onCurrentIndexChanged:
+        {
             monthPage.startDate = currentItem.startDate;
             monthPage.firstDayOfMonth = currentItem.firstDayOfMonth;
             monthPage.month = currentItem.month;
@@ -167,13 +179,16 @@ background: Rectangle
             active: isNextOrCurrentItem
             asynchronous: !isCurrentItem
             visible: status === Loader.Ready
+
             sourceComponent: Kalendar.DayGridView
             {
                 id: dayView
                 objectName: "monthView"
+
                 width: pathView.width
                 height: pathView.height
-                model: monthViewModel // from monthPage model
+
+                //                model: monthViewModel // from monthPage model
                 isCurrentView: viewLoader.isCurrentItem
                 dragDropEnabled: monthPage.dragDropEnabled
 
@@ -181,9 +196,13 @@ background: Rectangle
                 currentDate: monthPage.currentDate
                 month: viewLoader.month
 
+                onDateClicked: monthPage.selectedDate = date
+
                 dayHeaderDelegate: QQC2.Control
                 {
-                    Layout.maximumHeight: Maui.Style.units.gridUnit * 2
+                    leftPadding: Maui.Style.units.smallSpacing
+                    rightPadding: Maui.Style.units.smallSpacing
+
                     contentItem: Maui.LabelDelegate
                     {
                         label:
@@ -192,50 +211,30 @@ background: Rectangle
                             let midText = day.toLocaleString(Qt.locale(), "ddd");
                             let shortText = midText.slice(0,1);
 
-                            return midText;
 
-//                            switch(Kalendar.Config.weekdayLabelLength)
-//                            {
-//                            case Kalendar.Config.Full:
-//                                let chosenFormat = "dddd"
-//                                return monthPage.isLarge ? longText : monthPage.isTiny ? shortText : midText;
-//                            case Kalendar.Config.Abbreviated:
-//                                return monthPage.isTiny ? shortText : midText;
-//                            case Kalendar.Config.Letter:
-//                            default:
-//                                return shortText;
-//                            }
+                            return monthPage.isTiny ? shortText : midText;
                         }
-//                        level: 2
-                        leftPadding: Maui.Style.units.smallSpacing
-                        rightPadding: Maui.Style.units.smallSpacing
-                        labelTxt.horizontalAlignment: Text.AlignHCenter
-//                        horizontalAlignment: {
-//                            switch(Kalendar.Config.weekdayLabelAlignment) {
-//                            case Kalendar.Config.Left:
-//                                return Text.AlignLeft;
-//                            case Kalendar.Config.Center:
-//                                return Text.AlignHCenter;
-//                            case Kalendar.Config.Right:
-//                                return Text.AlignRight;
-//                            default:
-//                                return Text.AlignHCenter;
-//                            }
-//                        }
+
+
+                        labelTxt.horizontalAlignment: Text.AlignRight
+                        labelTxt.font.bold: true
+                        labelTxt.font.weight: Font.Bold
+                        labelTxt.font.pointSize: Maui.Style.fontSizes.big
+
                     }
                 }
 
                 weekHeaderDelegate: Maui.LabelDelegate
                 {
-                    padding: Kirigami.Units.smallSpacing
-//                    verticalAlignment: Qt.AlignTop
-//                    horizontalAlignment: Qt.AlignHCenter
+                    padding: Maui.Style.units.smallSpacing
+                    //                                        verticalAlignment: Qt.AlignTop
+                    labelTxt.horizontalAlignment: Qt.AlignHCenter
                     label: DateUtils.getWeek(startDate, Qt.locale().firstDayOfWeek)
-//                    background: Rectangle {
-//                        Kirigami.Theme.inherit: false
-//                        Kirigami.Theme.colorSet: Kirigami.Theme.View
-//                        color: Kirigami.Theme.backgroundColor
-//                    }
+                    //                    background: Rectangle {
+                    //                        Kirigami.Theme.inherit: false
+                    //                        Kirigami.Theme.colorSet: Kirigami.Theme.View
+                    //                        color: Kirigami.Theme.backgroundColor
+                    //                    }
                 }
 
                 openOccurrence: monthPage.openOccurrence

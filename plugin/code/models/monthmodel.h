@@ -55,6 +55,8 @@ public:
     QVariant data(const QModelIndex &index, int role) const override;
     int rowCount(const QModelIndex &parent) const override;
 
+    Q_INVOKABLE static QString monthName(int month);
+
 Q_SIGNALS:
     void yearChanged();
     void monthChanged();

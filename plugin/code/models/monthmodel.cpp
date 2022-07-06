@@ -188,6 +188,12 @@ int MonthModel::rowCount(const QModelIndex &parent) const
     return 42; // Display 6 weeks with each 7 days
 }
 
+QString MonthModel::monthName(int month)
+{
+    QLocale locale;
+    return locale.monthName(month);
+}
+
 QHash<int, QByteArray> MonthModel::roleNames() const
 {
     return {

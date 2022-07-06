@@ -33,6 +33,7 @@ void MauiCalendarPlugin::registerTypes(const char *uri)
 
     qmlRegisterType(resolveFileUrl(QStringLiteral("DayLabelsBar.qml")), uri, 1, 0, "DayLabelsBar");
     qmlRegisterType(resolveFileUrl(QStringLiteral("MonthView.qml")), uri, 1, 0, "MonthView");
+    qmlRegisterType(resolveFileUrl(QStringLiteral("YearView.qml")), uri, 1, 0, "YearView");
     qmlRegisterType(resolveFileUrl(QStringLiteral("DayGridView.qml")), uri, 1, 0, "DayGridView");
     qmlRegisterType(resolveFileUrl(QStringLiteral("HourlyView.qml")), uri, 1, 0, "HourlyView");
 

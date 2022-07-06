@@ -52,7 +52,10 @@ int main(int argc, char *argv[])
     parser.process(app);
     about.processCommandLine(&parser);
 
+
     QQmlApplicationEngine engine;
+    qDebug() << engine.importPathList();
+
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
