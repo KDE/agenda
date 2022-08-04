@@ -24,6 +24,7 @@ $APT_COMMAND install -qy --no-install-recommends \
     libgit2-dev \
     libkf5akonadi-dev \
     libkf5akonadicontact-dev \
+ 	libkf5calendarsupport-dev \
     libkf5config-dev \
     libkf5coreaddons-dev \
     libkf5kio-dev \
