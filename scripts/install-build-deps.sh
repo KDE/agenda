@@ -27,6 +27,7 @@ $APT_COMMAND install -qy --no-install-recommends \
  	libkf5calendarsupport-dev \
     libkf5config-dev \
     libkf5coreaddons-dev \
+ 	libkf5eventviews-dev \
     libkf5kio-dev \
     libkf5i18n-dev \
     libwayland-dev \
