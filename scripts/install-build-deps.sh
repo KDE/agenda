@@ -23,6 +23,7 @@ $APT_COMMAND install -qy --no-install-recommends \
     gnupg2 \
     libgit2-dev \
     libkf5akonadi-dev \
+    libkf5akonadicontact-dev \
     libkf5config-dev \
     libkf5coreaddons-dev \
     libkf5kio-dev \
