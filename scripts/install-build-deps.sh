@@ -25,6 +25,7 @@ $APT_COMMAND install -qy --no-install-recommends \
     libkf5akonadi-dev \
     libkf5config-dev \
     libkf5coreaddons-dev \
+    libkf5kio-dev \
     libkf5i18n-dev \
     libwayland-dev \
     lintian \
