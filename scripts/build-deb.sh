@@ -65,7 +65,7 @@ checkinstall -D -y \
 	--pakdir=. \
 	--maintainer=uri_herrera@nxos.org \
 	--provides=maui-calendar \
-	--requires="libc6,libkf5akonadi5,libkf5akonadicontact5,libkf5calendarsupport5,libkf5coreaddons5,libkf5eventviews5,libkf5i18n5,libkf5kio5,libqt5core5a,libqt5gui5,libqt5qml5,libqt5sql5,libqt5widgets5,mauikit-accounts-git \(\>= 2.2.0+git\),mauikit-filebrowsing-git \(\>= 2.2.0+git\),mauikit-git \(\>= 2.2.0+git\)" \
+	--requires="libc6,libkf5akonadicore5,libkf5akonadicontact5,libkf5calendarsupport5,libkf5coreaddons5,libkf5eventviews5,libkf5i18n5,libkf5kiocore5,libqt5core5a,libqt5gui5,libqt5qml5,libqt5sql5,libqt5widgets5,mauikit-accounts-git \(\>= 2.2.0+git\),mauikit-filebrowsing-git \(\>= 2.2.0+git\),mauikit-git \(\>= 2.2.0+git\)" \
 	--nodoc \
 	--strip=no \
 	--stripso=yes \
