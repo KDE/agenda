@@ -55,16 +55,16 @@ make -j$(nproc)
 checkinstall -D -y \
 	--install=no \
 	--fstrans=yes \
-	--pkgname=maui-calendar-git \
+	--pkgname=agenda-git \
 	--pkgversion=$PACKAGE_VERSION \
 	--pkgarch=amd64 \
 	--pkgrelease="1" \
 	--pkglicense=LGPL-3 \
 	--pkggroup=utils \
-	--pkgsource=maui-calendar \
+	--pkgsource=agenda \
 	--pakdir=. \
 	--maintainer=uri_herrera@nxos.org \
-	--provides=maui-calendar \
+	--provides=agenda \
 	--requires="libc6,libkf5akonadicore5,libkf5akonadicontact5,libkf5calendarsupport5,libkf5coreaddons5,libkf5eventviews5,libkf5i18n5,libkf5kiocore5,libqt5core5a,libqt5gui5,libqt5qml5,libqt5sql5,libqt5widgets5,mauikit-accounts-git \(\>= 2.2.0+git\),mauikit-filebrowsing-git \(\>= 2.2.0+git\),mauikit-git \(\>= 2.2.0+git\)" \
 	--nodoc \
 	--strip=no \
