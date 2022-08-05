@@ -1,13 +1,13 @@
 [Desktop Entry]
-Name=Maui Calendar
+Name=Agenda
 Comment=Organize events in the calendar
-TryExec=maui-calendar
-Exec=maui-calendar %U
+TryExec=agenda
+Exec=agenda %U
 Terminal=false
 Type=Application
 GenericName=Calendar
 StartupNotify=true
-Icon=maui-calendar
+Icon=agenda
 Categories=Qt;KDE;Office;Calendar;
 MimeType=text/calendar;
 SingleMainWindow=true
