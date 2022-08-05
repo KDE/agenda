@@ -123,8 +123,15 @@ Maui.Page
 
         anchors.fill: parent
         flickDeceleration: Maui.Style.units.longDuration
+
+
         preferredHighlightBegin: 0.5
-        preferredHighlightEnd: 0.5
+                   preferredHighlightEnd: 0.5
+
+//                   highlightRangeMode: ListView.StrictlyEnforceRange
+                   highlightMoveDuration: 0
+
+
         //        spacing: 10
         snapMode: PathView.SnapToItem
         focus: true

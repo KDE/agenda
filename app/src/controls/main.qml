@@ -62,7 +62,8 @@ Maui.ApplicationWindow
         {
             anchors.fill: parent
             showCSDControls: true
-
+title: _stackView.currentItem.title
+headBar.background: null
             headBar.leftContent: [
                 ToolButton
                 {
@@ -140,9 +141,11 @@ Maui.ApplicationWindow
             {
                 id:_stackView
                 anchors.fill: parent
+                clip: true
                 initialItem: Cal.YearView
                 {
                     id: _yearView
+                    headBar.visible: false
                     onMonthClicked:
                     {
                         _stackView.push(_monthView)
@@ -154,6 +157,7 @@ Maui.ApplicationWindow
                 Cal.MonthView
                 {
                     id: _monthView
+                    headBar.visible: false
 
                     //                    visible: StackView.status === StackView.Active
                 }
@@ -204,7 +208,7 @@ Maui.ApplicationWindow
                         {
                             //                        target: _yearView.gridView.currentItem
                             property: "scale"
-                            from: 0
+                            from: 4
                             to: 1
                             duration: 200
                             easing.type: Easing.InOutCubic
