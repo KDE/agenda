@@ -89,32 +89,32 @@ Maui.Page
     headBar.background: null
     title: Qt.formatDate(pathView.currentItem.startDate, "MMM yyyy")
 
-    headBar.leftContent: Maui.ToolActions
-    {
-        autoExclusive: false
-        checkable: false
+//    headBar.leftContent: Maui.ToolActions
+//    {
+//        autoExclusive: false
+//        checkable: false
 
-        QQC2.Action
-        {
-            icon.name: "go-previous"
-            text: i18n("Previous Month")
-            shortcut: "Left"
-            onTriggered: setToDate(DateUtils.addMonthsToDate(pathView.currentItem.firstDayOfMonth, -1))
-        }
-        QQC2.Action
-        {
-            icon.name: "go-jump-today"
-            text: i18n("Today")
-            onTriggered: setToDate(new Date())
-        }
-        QQC2.Action
-        {
-            icon.name: "go-next"
-            text: i18n("Next Month")
-            shortcut: "Right"
-            onTriggered: setToDate(DateUtils.addMonthsToDate(pathView.currentItem.firstDayOfMonth, 1))
-        }
-    }
+//        QQC2.Action
+//        {
+//            icon.name: "go-previous"
+//            text: i18n("Previous Month")
+//            shortcut: "Left"
+//            onTriggered: setToDate(DateUtils.addMonthsToDate(pathView.currentItem.firstDayOfMonth, -1))
+//        }
+//        QQC2.Action
+//        {
+//            icon.name: "go-jump-today"
+//            text: i18n("Today")
+//            onTriggered: setToDate(new Date())
+//        }
+//        QQC2.Action
+//        {
+//            icon.name: "go-next"
+//            text: i18n("Next Month")
+//            shortcut: "Right"
+//            onTriggered: setToDate(DateUtils.addMonthsToDate(pathView.currentItem.firstDayOfMonth, 1))
+//        }
+//    }
 
 
     PathView

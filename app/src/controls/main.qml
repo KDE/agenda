@@ -14,22 +14,13 @@ Maui.ApplicationWindow
     {
         id: _sideBarView
 
-        sideBarContent:   Maui.Holder
+        sideBarContent:  Maui.Page
         {
             anchors.fill: parent
-            visible: true
+            Maui.Theme.colorSet: Maui.Theme.Window
 
-            emoji: "view-calendar"
-            title: Qt.formatDateTime(_appViews.currentItem.selectedDate, "dd MMM yyyy")
-            body: "No events for this day"
-        }
-
-        Maui.AppViews
-        {
-            id: _appViews
-            anchors.fill: parent
-            showCSDControls: true
-            headBar.leftContent: [Maui.ToolButtonMenu
+            headBar.leftContent: [
+                Maui.ToolButtonMenu
                 {
                     icon.name: "application-menu"
                     MenuItem
@@ -44,15 +35,79 @@ Maui.ApplicationWindow
                         icon.name: "documentinfo"
                         onTriggered: root.about()
                     }
-                },
+                }
+
+            ]
+
+            headBar.rightContent: [
+                ToolButton
+                {
+                    icon.name: "list-add"
+                }
+
+            ]
+
+            Maui.Holder
+            {
+                anchors.fill: parent
+                visible: true
+
+                emoji: "view-calendar"
+                title: Qt.formatDateTime(_stackView.currentItem.selectedDate, "dd MMM yyyy")
+                body: "No events for this day"
+            }
+        }
+
+        Maui.Page
+        {
+            anchors.fill: parent
+            showCSDControls: true
+
+            headBar.leftContent: [
                 ToolButton
                 {
                     icon.name: "sidebar-collapse"
                     onClicked: _sideBarView.sideBar.toggle()
                     checked: _sideBarView.sideBar.visible
+                },
+
+                ToolButton
+                {
+                    icon.name: "go-previous"
+                    onClicked: _stackView.pop()
+                    visible: _stackView.depth === 2
+                    text: _yearView.title
+                }
+            ]
+
+            headBar.rightContent: Maui.ToolActions
+            {
+                autoExclusive: false
+                checkable: false
+
+                Action
+                {
+                    icon.name: "go-previous"
+                    text: i18n("Previous Year")
+                    shortcut: "Left"
+                    onTriggered: monthPage.year--
                 }
 
-            ]
+                Action
+                {
+                    icon.name: "go-jump-today"
+                    text: i18n("Today")
+                    onTriggered: monthPage.year = currentDate.getUTCFullYear()
+                }
+
+                Action
+                {
+                    icon.name: "go-next"
+                    text: i18n("Next Year")
+                    shortcut: "Right"
+                    onTriggered: monthPage.year++
+                }
+            }
 
             //            headBar.middleContent: Maui.ToolActions
             //            {
@@ -81,37 +136,104 @@ Maui.ApplicationWindow
             //            }
 
 
-                Cal.MonthView
-                {
-                    id: _monthView
-                     Maui.AppView.title: i18n("Month")
-                }
-
-
-            Maui.AppViewLoader
+            StackView
             {
-                Maui.AppView.title: i18n("Year")
-
-                Cal.YearView
+                id:_stackView
+                anchors.fill: parent
+                initialItem: Cal.YearView
                 {
+                    id: _yearView
                     onMonthClicked:
                     {
-                        _appViews.currentIndex = 0
+                        _stackView.push(_monthView)
                         _monthView.setToDate(date)
                     }
                 }
+
+
+                Cal.MonthView
+                {
+                    id: _monthView
+
+                    //                    visible: StackView.status === StackView.Active
+                }
+
+
+                pushExit: Transition
+                {
+                    ParallelAnimation
+                    {
+                        PropertyAnimation
+                        {
+                            //                        target: _yearView.gridView.currentItem
+                            property: "scale"
+                            from: 1
+                            to: 4
+                            duration: 200
+                            easing.type: Easing.InOutCubic
+                        }
+
+                        NumberAnimation { property: "opacity"; from: 1; to: 0; duration: 200; easing.type: Easing.InOutCubic }
+                    }
+
+                }
+
+                pushEnter: Transition
+                {
+                    ParallelAnimation
+                    {
+                        PropertyAnimation
+                        {
+                            //                        target: _yearView.gridView.currentItem
+                            property: "scale"
+                            from: 0
+                            to: 1
+                            duration: 200
+                            easing.type: Easing.OutCubic
+                        }
+
+                        NumberAnimation { property: "opacity"; from: 0; to: 1; duration: 200; easing.type: Easing.OutCubic }
+                    }
+                }
+
+                popEnter: Transition
+                {
+                    ParallelAnimation
+                    {
+                        PropertyAnimation
+                        {
+                            //                        target: _yearView.gridView.currentItem
+                            property: "scale"
+                            from: 0
+                            to: 1
+                            duration: 200
+                            easing.type: Easing.InOutCubic
+                        }
+
+                        NumberAnimation { property: "opacity"; from: 0; to: 1; duration: 200; easing.type: Easing.InOutCubic }
+                    }
+                }
+
+                popExit: Transition
+                {
+                    ParallelAnimation
+                    {
+                        PropertyAnimation
+                        {
+                            //                        target: _yearView.gridView.currentItem
+                            property: "scale"
+                            from: 1
+                            to: 0
+                            duration: 200
+                            easing.type: Easing.OutCubic
+                        }
+
+                        NumberAnimation { property: "opacity"; from: 1; to: 0; duration: 200; easing.type: Easing.OutCubic }
+                    }
+
+                }
             }
-
-            //                Maui.AppViewLoader
-            //                {
-            //                    id: _weekViewComponent
-            //                    Cal.HourlyView
-            //                    {
-            //                    }
-            //                }
         }
-
-
 
     }
 

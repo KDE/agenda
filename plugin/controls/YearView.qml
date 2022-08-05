@@ -36,43 +36,15 @@ Maui.Page
     property bool initialMonth: true
     readonly property bool isLarge: width > Maui.Style.units.gridUnit * 40
     readonly property bool isTiny: width <= Maui.Style.units.gridUnit * 40
-
+property alias gridView :_gridView
 
     headBar.background: null
     title: monthPage.year
 
-    headBar.leftContent: Maui.ToolActions
-    {
-        autoExclusive: false
-        checkable: false
-
-        QQC2.Action
-        {
-            icon.name: "go-previous"
-            text: i18n("Previous Year")
-            shortcut: "Left"
-            onTriggered: monthPage.year--
-        }
-        QQC2.Action
-        {
-            icon.name: "go-jump-today"
-            text: i18n("Today")
-            onTriggered: monthPage.year = currentDate.getUTCFullYear()
-        }
-        QQC2.Action
-        {
-            icon.name: "go-next"
-            text: i18n("Next Year")
-            shortcut: "Right"
-            onTriggered: monthPage.year++
-        }
-    }
-
-
 
     GridView
     {
-        id: pathView
+        id: _gridView
 
         anchors.fill: parent
         anchors.margins : Maui.Style.space.medium
@@ -87,7 +59,7 @@ Maui.Page
         {
             id: viewLoader
 
-            property bool isNextOrCurrentItem: index >= pathView.currentIndex -1 && index <= pathView.currentIndex + 1
+            property bool isNextOrCurrentItem: index >= _gridView.currentIndex -1 && index <= _gridView.currentIndex + 1
             property bool isCurrentItem: GridView.isCurrentItem
 
             active: true
