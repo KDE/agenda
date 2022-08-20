@@ -13,6 +13,7 @@ Maui.ApplicationWindow
     Maui.SideBarView
     {
         id: _sideBarView
+        anchors.fill: parent
 
         sideBarContent:  Maui.Page
         {
@@ -62,8 +63,8 @@ Maui.ApplicationWindow
         {
             anchors.fill: parent
             showCSDControls: true
-title: _stackView.currentItem.title
-headBar.background: null
+            title: _stackView.currentItem.title
+            headBar.background: null
             headBar.leftContent: [
                 ToolButton
                 {
