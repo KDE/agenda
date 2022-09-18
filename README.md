@@ -1,4 +1,4 @@
-# Maui Calendar
+# Agenda
 
 Calendar application built with MauiKit.
 
