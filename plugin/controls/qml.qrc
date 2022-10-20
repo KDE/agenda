@@ -7,6 +7,9 @@
         <file alias="DayLabelsBar.qml">DayLabelsBar.qml</file>
         <file>dateutils.js</file>
         <file>labelutils.js</file>
-        <file>YearView.qml</file>
+        <file alias="YearView.qml">YearView.qml</file>
+        <file alias="EventPage.qml">EventPage.qml</file>
+        <file alias="Month.qml">Month.qml</file>
+        <file alias="DateComboBox.qml">DateComboBox.qml</file>
     </qresource>
 </RCC>

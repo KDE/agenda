@@ -10,6 +10,29 @@ Maui.ApplicationWindow
     id: root
     title: qsTr("Astro")
 
+
+    Maui.Dialog
+    {
+        id: _eventDialog
+        headBar.visible: false
+        acceptButton.text: i18n("Create")
+
+        onRejected: close()
+
+    Cal.EventPage
+    {
+        Layout.fillWidth: true
+    }
+    }
+
+    Action
+    {
+        id: _newEventAction
+        text: "New event"
+        icon.name: "new-event"
+        onTriggered: _eventDialog.open()
+    }
+
     Maui.SideBarView
     {
         id: _sideBarView
@@ -43,7 +66,7 @@ Maui.ApplicationWindow
             headBar.rightContent: [
                 ToolButton
                 {
-                    icon.name: "list-add"
+                    action: _newEventAction
                 }
 
             ]
@@ -86,20 +109,21 @@ Maui.ApplicationWindow
             {
                 autoExclusive: false
                 checkable: false
+                display: ToolButton.IconOnly
 
                 Action
                 {
                     icon.name: "go-previous"
                     text: i18n("Previous Year")
                     shortcut: "Left"
-                    onTriggered: monthPage.year--
+                    onTriggered: _stackView.currentItem.previousDate()
                 }
 
                 Action
                 {
                     icon.name: "go-jump-today"
                     text: i18n("Today")
-                    onTriggered: monthPage.year = currentDate.getUTCFullYear()
+                    onTriggered: _stackView.currentItem.resetDate()
                 }
 
                 Action
@@ -107,36 +131,9 @@ Maui.ApplicationWindow
                     icon.name: "go-next"
                     text: i18n("Next Year")
                     shortcut: "Right"
-                    onTriggered: monthPage.year++
+                    onTriggered: _stackView.currentItem.nextDate()
                 }
             }
-
-            //            headBar.middleContent: Maui.ToolActions
-            //            {
-            //                Layout.alignment: Qt.AlignCenter
-            //                expanded: true
-            //                autoExclusive: true
-
-            //                Action
-            //                {
-            //                    text: i18n("Year")
-            //                    onTriggered: _loaderView.sourceComponent = _yearViewComponent
-            //                }
-
-            //                Action
-            //                {
-            //                    text: i18n("Month")
-            //                    onTriggered: _loaderView.sourceComponent = _monthViewComponent
-            //                }
-
-            //                Action
-            //                {
-            //                    text: i18n("Week")
-            //                    onTriggered: _loaderView.sourceComponent = _weekViewComponent
-
-            //                }
-            //            }
-
 
             StackView
             {
@@ -146,22 +143,23 @@ Maui.ApplicationWindow
                 initialItem: Cal.YearView
                 {
                     id: _yearView
-                    headBar.visible: false
                     onMonthClicked:
                     {
-                        _stackView.push(_monthView)
-                        _monthView.setToDate(date)
+                        _stackView.push(_monthViewComponent)
+                        _stackView.currentItem.setToDate(_stackView.currentItem.addMonthsToDate(date, -1))
                     }
                 }
 
 
-                Cal.MonthView
+                Component
                 {
-                    id: _monthView
-                    headBar.visible: false
+                    id: _monthViewComponent
+                    Cal.MonthView
+                    {
 
-                    //                    visible: StackView.status === StackView.Active
+                    }
                 }
+
 
 
                 pushExit: Transition
@@ -170,7 +168,6 @@ Maui.ApplicationWindow
                     {
                         PropertyAnimation
                         {
-                            //                        target: _yearView.gridView.currentItem
                             property: "scale"
                             from: 1
                             to: 4

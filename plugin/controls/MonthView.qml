@@ -12,20 +12,14 @@ import org.maui.calendar 1.0 as Kalendar
 
 import "dateutils.js" as DateUtils
 
-Maui.Page
+QQC2.Pane
 {
-    id: monthPage
+    id: control
 
     padding : 0
 
-    property date currentDate: new Date()
-    Timer
-    {
-        interval: 5000;
-        running: true
-        repeat: true
-        onTriggered: currentDate = new Date()
-    }
+    readonly property date currentDate: new Date()
+    readonly property string title: Qt.formatDate(pathView.currentItem.firstDayOfMonth, "MMM yyyy")
 
     property var openOccurrence: ({})
     property var filter: {
@@ -40,6 +34,7 @@ Maui.Page
     property int month
     property int year
     property bool initialMonth: true
+
     readonly property bool isLarge: width > Maui.Style.units.gridUnit * 40
     readonly property bool isTiny: width < Maui.Style.units.gridUnit * 18
 
@@ -61,9 +56,9 @@ Maui.Page
     }
 
 
-    function setToDate(date, isInitialMonth = false)
+    function setToDate(date, isInitialMonth = true)
     {
-        monthPage.initialMonth = isInitialMonth;
+        control.initialMonth = isInitialMonth;
         let monthDiff = date.getMonth() - pathView.currentItem.firstDayOfMonth.getMonth() + (12 * (date.getFullYear() - pathView.currentItem.firstDayOfMonth.getFullYear()))
         let newIndex = pathView.currentIndex + monthDiff;
 
@@ -86,42 +81,12 @@ Maui.Page
         pathView.currentIndex = newIndex;
     }
 
-    headBar.background: null
-    title: Qt.formatDate(pathView.currentItem.startDate, "MMM yyyy")
-
-//    headBar.leftContent: Maui.ToolActions
-//    {
-//        autoExclusive: false
-//        checkable: false
-
-//        QQC2.Action
-//        {
-//            icon.name: "go-previous"
-//            text: i18n("Previous Month")
-//            shortcut: "Left"
-//            onTriggered: setToDate(DateUtils.addMonthsToDate(pathView.currentItem.firstDayOfMonth, -1))
-//        }
-//        QQC2.Action
-//        {
-//            icon.name: "go-jump-today"
-//            text: i18n("Today")
-//            onTriggered: setToDate(new Date())
-//        }
-//        QQC2.Action
-//        {
-//            icon.name: "go-next"
-//            text: i18n("Next Month")
-//            shortcut: "Right"
-//            onTriggered: setToDate(DateUtils.addMonthsToDate(pathView.currentItem.firstDayOfMonth, 1))
-//        }
-//    }
 
 
-    PathView
+   contentItem:  PathView
     {
         id: pathView
 
-        anchors.fill: parent
         flickDeceleration: Maui.Style.units.longDuration
 
 
@@ -146,7 +111,7 @@ Maui.Page
             }
         }
 
-        model: monthPage.model
+        model: control.model
 
         property int startIndex
 
@@ -158,10 +123,10 @@ Maui.Page
 
         onCurrentIndexChanged:
         {
-            monthPage.startDate = currentItem.startDate;
-            monthPage.firstDayOfMonth = currentItem.firstDayOfMonth;
-            monthPage.month = currentItem.month;
-            monthPage.year = currentItem.year;
+            control.startDate = currentItem.startDate;
+            control.firstDayOfMonth = currentItem.firstDayOfMonth;
+            control.month = currentItem.month;
+            control.year = currentItem.year;
 
             if(currentIndex >= count - 2) {
                 model.addDates(true);
@@ -195,15 +160,15 @@ Maui.Page
                 width: pathView.width
                 height: pathView.height
 
-                //                model: monthViewModel // from monthPage model
+                //                model: monthViewModel // from control model
                 isCurrentView: viewLoader.isCurrentItem
-                dragDropEnabled: monthPage.dragDropEnabled
+                dragDropEnabled: control.dragDropEnabled
 
                 startDate: viewLoader.startDate
-                currentDate: monthPage.currentDate
+                currentDate: control.currentDate
                 month: viewLoader.month
 
-                onDateClicked: monthPage.selectedDate = date
+                onDateClicked: control.selectedDate = date
 
                 dayHeaderDelegate: QQC2.Control
                 {
@@ -219,7 +184,7 @@ Maui.Page
                             let shortText = midText.slice(0,1);
 
 
-                            return monthPage.isTiny ? shortText : midText;
+                            return control.isTiny ? shortText : midText;
                         }
 
 
@@ -244,9 +209,29 @@ Maui.Page
                     //                    }
                 }
 
-                openOccurrence: monthPage.openOccurrence
+                openOccurrence: control.openOccurrence
             }
         }
+    }
+
+    function resetDate()
+    {
+        setToDate(new Date())
+    }
+
+    function nextDate()
+    {
+        setToDate(DateUtils.addMonthsToDate(pathView.currentItem.firstDayOfMonth, 1))
+    }
+
+    function previousDate()
+    {
+        setToDate(DateUtils.addMonthsToDate(pathView.currentItem.firstDayOfMonth, -1))
+    }
+
+    function addMonthsToDate(date, days)
+    {
+        return DateUtils.addMonthsToDate(date, days)
     }
 }
 
