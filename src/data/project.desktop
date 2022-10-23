@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=Agenda
+Comment=Organize events in the calendar
+TryExec=agenda
+Exec=agenda %U
+Terminal=false
+Type=Application
+GenericName=Calendar
+StartupNotify=true
+Icon=agenda
+Categories=Qt;KDE;Office;Calendar;
+MimeType=text/calendar;
+SingleMainWindow=true
