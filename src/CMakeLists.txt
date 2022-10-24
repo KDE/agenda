@@ -21,7 +21,7 @@ target_compile_definitions(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
     MauiKit
-    MauiCalendarLib
+    MauiKit::Calendar
 
     Qt5::Core
     Qt5::Quick
@@ -29,21 +29,6 @@ target_link_libraries(${PROJECT_NAME}
 
     KF5::CoreAddons
     KF5::I18n
-
-#    KF5::CalendarCore
-#    KF5::AkonadiCore
-#    KF5::AkonadiCalendar
-#    KF5::AkonadiContact
-#    KF5::AkonadiAgentBase
-#    KF5::AkonadiXml
-#    KF5::CalendarSupport
-#    KF5::Contacts
-    )
-
-message("PLUGIN DIR" ${CALENDAR_PLUGIN_DIR} " to "  ${CMAKE_CURRENT_BINARY_DIR})
-add_custom_target(copy_calendar_plugin_to_bin ALL
-    COMMAND ${CMAKE_COMMAND} -E
-    copy_directory ${CALENDAR_PLUGIN_DIR} ${CMAKE_CURRENT_BINARY_DIR}
     )
 
 install(TARGETS ${PROJECT_NAME} ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

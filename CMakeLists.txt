@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(agenda VERSION ${MAUICALENDAR_VERSION})
+project(agenda VERSION 1.5.5)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -16,11 +16,6 @@ set(KF5_MIN_VERSION "5.92.0")
 
 set(PROJECT_URI "org.kde.${PROJECT_NAME}")
 add_definitions(-DPROJECT_URI="${PROJECT_URI}")
-
-set(AKONADI_VERSION "5.19.0")
-set(AKONADI_CONTACT_VERSION "5.19.0")
-set(CALENDARSUPPORT_LIB_VERSION "5.19")
-set(EVENTVIEW_LIB_VERSION "5.19.0")
 
 find_package(ECM ${REQUIRED_KF5_VERSION} REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
@@ -45,11 +40,7 @@ set_package_properties(Qt5QuickCompiler PROPERTIES
     )
 
 find_package(MauiKit)
-
-#find_package(KF5Akonadi ${AKONADI_VERSION} CONFIG REQUIRED)
-#find_package(KF5AkonadiContact ${AKONADI_CONTACT_VERSION} CONFIG REQUIRED)
-#find_package(KF5CalendarSupport ${CALENDARSUPPORT_LIB_VERSION} CONFIG REQUIRED)
-#find_package(KF5EventViews ${EVENTVIEW_LIB_VERSION} CONFIG REQUIRED)
+find_package(MauiKit REQUIRED COMPONENTS Calendar)
 
 if(ECM_SOURCE_UNDER_VERSION_CONTROL)
     execute_process(
@@ -82,9 +73,9 @@ ecm_setup_version(${PROJECT_VERSION}
 
 add_subdirectory(src)
 
-install(FILES data/project.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR} RENAME ${PROJECT_URI}.appdata.xml)
+install(FILES src/data/project.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR} RENAME ${PROJECT_URI}.appdata.xml)
 
-install(FILES data/project.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} RENAME ${PROJECT_URI}.desktop)
+install(FILES src/data/project.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} RENAME ${PROJECT_URI}.desktop)
 
 install(FILES src/assets/logo.svg DESTINATION ${KDE_INSTALL_ICONDIR}/hicolor/scalable/apps RENAME ${PROJECT_NAME}.svg)
 
