@@ -19,10 +19,16 @@ Maui.ApplicationWindow
 
         onRejected: close()
 
-    Cal.EventPage
-    {
-        Layout.fillWidth: true
-    }
+        onAccepted:
+        {
+            Cal.CalendarManager.addIncidence(_eventPage.incidence)
+        }
+
+        Cal.EventPage
+        {
+            id: _eventPage
+            Layout.fillWidth: true
+        }
     }
 
     Action
@@ -47,6 +53,29 @@ Maui.ApplicationWindow
                 Maui.ToolButtonMenu
                 {
                     icon.name: "application-menu"
+
+
+                    MenuItem
+                    {
+                        contentItem: Column
+                        {
+                            Repeater
+                            {
+                                model: Cal.CalendarManager.collections
+                                delegate: MenuItem
+                                {
+                                    width: parent.width
+                                    checkable: true
+                                    text: model.display
+
+                                    checked: model.checkState === 2
+                                                                    onTriggered: model.checkState = model.checkState === 0 ? 2 : 0
+
+                                }
+                            }
+                        }
+                    }
+
                     MenuItem
                     {
                         text: i18n("Settings")
@@ -71,14 +100,33 @@ Maui.ApplicationWindow
 
             ]
 
-            Maui.Holder
+
+            Maui.ListBrowser
             {
                 anchors.fill: parent
-                visible: true
+                holder.visible: count === 0
 
-                emoji: "view-calendar"
-                title: Qt.formatDateTime(_stackView.currentItem.selectedDate, "dd MMM yyyy")
-                body: "No events for this day"
+                holder.emoji: "view-calendar"
+                holder.title: Qt.formatDateTime(_stackView.currentItem.selectedDate, "dd MMM yyyy")
+                holder.body: "No events for this day"
+
+                model: Cal.IncidenceOccurrenceModel
+                {
+                    start: _stackView.currentItem.selectedDate
+                    length: 0
+                    calendar: Cal.CalendarManager.calendar
+                    filter: Cal.Filter
+                }
+
+                delegate: Maui.ListBrowserDelegate
+                {
+                    width: ListView.view.width
+
+                    property var data : model.incidences
+                    label1.text: model.summary
+                    label2.text: model.startTime.toLocaleTimeString()
+                }
+
             }
         }
 
