@@ -107,11 +107,12 @@ Maui.ApplicationWindow
                 holder.visible: count === 0
 
                 holder.emoji: "view-calendar"
-                holder.title: Qt.formatDateTime(_stackView.currentItem.selectedDate, "dd MMM yyyy")
+                holder.title: i18n("Empty!")
                 holder.body: "No events for this day"
 
                 model: Cal.IncidenceOccurrenceModel
                 {
+                    id: _eventsModel
                     start: _stackView.currentItem.selectedDate
                     length: 0
                     calendar: Cal.CalendarManager.calendar
@@ -127,6 +128,66 @@ Maui.ApplicationWindow
                     label2.text: model.startTime.toLocaleTimeString()
                 }
 
+                header: Item
+                {
+                    width: parent.width
+                    height: _cardlayout.height + Maui.Style.space.medium
+
+                    Pane
+                    {
+                        id: _cardlayout
+
+                        width: parent.width
+                        height: implicitContentHeight + topPadding + bottomPadding
+
+                        padding: Maui.Style.space.medium
+
+                        background: Rectangle
+                        {
+                            radius: Maui.Style.radiusV
+                            color: Maui.Theme.alternateBackgroundColor
+                        }
+
+                        contentItem: ColumnLayout
+                        {
+                            spacing: Maui.Style.space.medium
+
+                            Pane
+                            {
+                                implicitWidth: Math.max(implicitContentWidth+ leftPadding + rightPadding, height)
+                                implicitHeight: implicitContentHeight + topPadding + bottomPadding
+
+                                padding: Maui.Style.space.medium
+
+                                background: Rectangle
+                                {
+                                    color: Maui.Theme.backgroundColor
+                                    radius: Maui.Style.radiusV
+                                }
+
+                                contentItem: Label
+                                {
+                                    horizontalAlignment: Qt.AlignHCenter
+                                    color:"orange"
+                                    text: _eventsModel.start.getDate()
+                                    font.bold: true
+                                    font.weight: Font.Black
+                                    font.pointSize: 32
+                                }
+                            }
+
+                            Label
+                            {
+                                Layout.fillWidth: true
+                                text: Qt.formatDateTime(_eventsModel.start, "MMM yyyy")
+                                font.bold: true
+                                font.weight: Font.DemiBold
+                                font.pointSize: 12
+                            }
+                        }
+                    }
+
+}
             }
         }
 
@@ -204,7 +265,7 @@ Maui.ApplicationWindow
                     id: _monthViewComponent
                     Cal.MonthView
                     {
-
+                        onDateDoubleClicked: _eventDialog.open()
                     }
                 }
 
