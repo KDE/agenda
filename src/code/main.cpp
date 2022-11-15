@@ -3,6 +3,7 @@
 #include <QCommandLineParser>
 #include <QDate>
 #include <QIcon>
+#include <QQmlContext>
 
 #include <MauiKit/Core/mauiapp.h>
 
@@ -30,8 +31,6 @@ int main(int argc, char *argv[])
     app.setOrganizationName(QStringLiteral(ORG_NAME));
     app.setWindowIcon(QIcon(":/logo.png"));
 
-    MauiApp::instance()->setIconName("qrc:/logo.svg");
-
     KLocalizedString::setApplicationDomain(COMPONENT_NAME);
 
     KAboutData about(QStringLiteral(COMPONENT_NAME), i18n(PROJECT_NAME), PROJECT_VERSION_STRING, i18n(PROJECT_DESCRIPTION),
@@ -44,17 +43,19 @@ int main(int argc, char *argv[])
     about.setBugAddress(REPORT_PAGE);
     about.setOrganizationDomain(PROJECT_URI);
     about.setProgramLogo(app.windowIcon());
+    about.addComponent("Akonadi");
 
     KAboutData::setApplicationData(about);
+    MauiApp::instance()->setIconName("qrc:/logo.svg");
 
     QCommandLineParser parser;
     parser.setApplicationDescription(about.shortDescription());
     parser.process(app);
     about.processCommandLine(&parser);
 
-
     QQmlApplicationEngine engine;
     qDebug() << engine.importPathList();
+    engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

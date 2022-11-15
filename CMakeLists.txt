@@ -73,6 +73,8 @@ ecm_setup_version(${PROJECT_VERSION}
 
 add_subdirectory(src)
 
+ki18n_install(po)
+
 install(FILES src/data/project.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR} RENAME ${PROJECT_URI}.appdata.xml)
 
 install(FILES src/data/project.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} RENAME ${PROJECT_URI}.desktop)
