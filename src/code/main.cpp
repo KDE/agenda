@@ -44,6 +44,7 @@ int main(int argc, char *argv[])
     about.setOrganizationDomain(PROJECT_URI);
     about.setProgramLogo(app.windowIcon());
     about.addComponent("Akonadi");
+    about.addCredit(i18n("Kalendar Developers"));
 
     KAboutData::setApplicationData(about);
     MauiApp::instance()->setIconName("qrc:/logo.svg");
