@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
     about.processCommandLine(&parser);
 
     QQmlApplicationEngine engine;
-    qDebug() << engine.importPathList();
+
     engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
