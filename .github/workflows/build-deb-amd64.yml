@@ -1,4 +1,4 @@
-name: Maui Calendar Deb
+name: Agenda Deb
 
 on:
   workflow_dispatch:
