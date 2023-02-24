@@ -43,6 +43,7 @@ Maui.ApplicationWindow
     {
         id: _sideBarView
         anchors.fill: parent
+        sideBar.autoHide: true
 
         sideBarContent:  Maui.Page
         {
@@ -195,12 +196,12 @@ Maui.ApplicationWindow
         {
             anchors.fill: parent
             showCSDControls: true
-            title: _stackView.currentItem.title
+//            title: _stackView.currentItem.title
             headBar.background: null
             headBar.leftContent: [
                 ToolButton
                 {
-                    icon.name: "sidebar-collapse"
+                    icon.name: checked ? "sidebar-collapse" : "sidebar-expand"
                     onClicked: _sideBarView.sideBar.toggle()
                     checked: _sideBarView.sideBar.visible
                 },
